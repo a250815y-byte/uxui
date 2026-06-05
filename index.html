@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>課題管理</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+  /* ============================================================
+   * ATOMS — 最小単位のパーツ
+   * すべての UI の根幹。単体で意味をもつ最小要素。
+   * ============================================================ */
+
+  :root {
+    --primary:        #378ADD;
+    --primary-dark:   #2568B0;
+    --danger:         #E24B4A;
+    --danger-bg:      #FCEBEB;
+    --danger-text:    #A32D2D;
+    --warning:        #EF9F27;
+    --warning-bg:     #FAEEDA;
+    --warning-text:   #854F0B;
+    --neutral-bg:     #F1EFE8;
+    --neutral-text:   #5F5E5A;
+    --neutral-border: #B4B2A9;
+    --surface:        #ffffff;
+    --bg:             #F8F9FA;
+    --border:         #E9ECEF;
+    --text:           #212529;
+    --text-muted:     #6C757D;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      14px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md:      0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  /* --- Atom: Priority Badge --- */
+  .badge-priority {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .badge-high { background: var(--danger-bg);  color: var(--danger-text); }
+  .badge-mid  { background: var(--warning-bg); color: var(--warning-text); }
+  .badge-low  { background: var(--neutral-bg); color: var(--neutral-text); }
+
+  /* --- Atom: Left-border accent (priority color) --- */
+  .accent-high { border-left: 4px solid var(--danger)  !important; }
+  .accent-mid  { border-left: 4px solid var(--warning) !important; }
+  .accent-low  { border-left: 4px solid var(--neutral-border) !important; }
+
+  /* --- Atom: Checkbox (custom) --- */
+  .task-check {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid #ced4da;
+    appearance: none; -webkit-appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    background: var(--surface);
+    transition: background .15s, border-color .15s;
+  }
+  .task-check:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='white' stroke-width='2.5' d='M3 8l3.5 3.5L13 4'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* --- Atom: Progress bar --- */
+  .progress-atom {
+    height: 6px;
+    border-radius: 3px;
+    background: #E9ECEF;
+    overflow: hidden;
+  }
+  .progress-atom-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--primary);
+    transition: width .3s ease;
+  }
+
+  /* --- Atom: FAB button --- */
+  .fab {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    font-size: 1.5rem;
+    border: none;
+    box-shadow: var(--shadow-md);
+    z-index: 9999;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, transform .1s;
+  }
+  .fab:hover    { background: var(--primary-dark); }
+  .fab:active   { transform: scale(0.95); }
+
+  /* --- Atom: Icon label (stat item) --- */
+  .stat-label {
+    font-size: .8rem;
+    color: var(--text-muted);
+  }
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* ============================================================
+   * MOLECULES — 小さな機能セット
+   * Atom を組み合わせた、ひとつの小さな機能単位。
+   * ============================================================ */
+
+  /* --- Molecule: Task card row --- */
+  .task-card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: .875rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    transition: box-shadow .15s;
+    margin-bottom: .625rem;
+    border-left-width: 4px;   /* accent-* クラスで色が入る */
+  }
+  .task-card:hover { box-shadow: var(--shadow-md); }
+  .task-card.done  { opacity: .55; }
+  .task-card.done .task-card__name { text-decoration: line-through; color: var(--text-muted); }
+
+  .task-card__body  { flex: 1; min-width: 0; }
+  .task-card__name  { font-size: .9375rem; font-weight: 600; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .task-card__meta  { font-size: .8rem; color: var(--text-muted); margin: 2px 0 0; }
+  .task-card__meta.urgent { color: var(--danger-text); font-weight: 500; }
+  .task-card__right { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+
+  /* --- Molecule: Stat card --- */
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 1.25rem;
+    text-align: center;
+  }
+
+  /* --- Molecule: Priority selector (radio group) --- */
+  /* Bootstrap の btn-group をそのまま利用しつつスタイルを上書き */
+  .priority-selector .btn-check:checked + .btn-outline-danger  { background: var(--danger-bg);  color: var(--danger-text);  border-color: var(--danger); }
+  .priority-selector .btn-check:checked + .btn-outline-warning { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning); }
+  .priority-selector .btn-check:checked + .btn-outline-secondary { background: var(--neutral-bg); color: var(--neutral-text); border-color: var(--neutral-border); }
+
+  /* --- Molecule: Group header (date divider) --- */
+  .group-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 1rem 0 .5rem;
+  }
+  .group-header::before {
+    content: '';
+    display: block;
+    width: 3px; height: 14px;
+    border-radius: 0;
+  }
+  .group-header.today::before    { background: var(--danger); }
+  .group-header.tomorrow::before { background: var(--warning); }
+  .group-header.no-due::before   { background: var(--neutral-border); }
+  .group-header.done::before     { background: var(--neutral-border); }
+
+  /* ============================================================
+   * ORGANISMS — 機能ブロック
+   * Molecule が組み合わさった、独立して機能するセクション。
+   * ============================================================ */
+
+  /* --- Organism: Navbar --- */
+  .navbar { background: var(--primary) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .navbar .navbar-brand { font-weight: 700; letter-spacing: .03em; }
+  .navbar .nav-link { color: rgba(255,255,255,.85) !important; }
+  .navbar .nav-link:hover,
+  .navbar .nav-link.active { color: #fff !important; }
+
+  /* --- Organism: Summary section --- */
+  .summary-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #fff;
+    padding: 2rem 0;
+  }
+  .summary-section .stat-card {
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    color: #fff;
+  }
+  .summary-section .stat-label { color: rgba(255,255,255,.75); }
+  .summary-section .alert-urgent {
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.4);
+    border-radius: var(--radius-md);
+    padding: .625rem 1rem;
+    font-size: .875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  /* --- Organism: Task list with tabs --- */
+  .task-list-section {
+    background: var(--bg);
+    padding: 2rem 0;
+  }
+  .nav-tabs { border-bottom: 2px solid var(--border); }
+  .nav-tabs .nav-link {
+    color: var(--text-muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: .625rem 1.25rem;
+    font-weight: 500;
+    transition: color .15s, border-color .15s;
+  }
+  .nav-tabs .nav-link:hover { color: var(--primary); border-bottom-color: var(--primary); }
+  .nav-tabs .nav-link.active { color: var(--primary); border-bottom-color: var(--primary); background: transparent; }
+
+  /* --- Organism: Add Task Modal --- */
+  .modal-content { border-radius: var(--radius-lg); border: none; box-shadow: 0 16px 48px rgba(0,0,0,0.18); }
+  .modal-header  { border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem; }
+  .modal-footer  { border-top: 1px solid var(--border); padding: 1rem 1.5rem; }
+  .form-control, .form-select {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    font-size: .9rem;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(55,138,221,.15);
+  }
+  .form-label { font-size: .8rem; font-weight: 600; color: var(--text-muted); margin-bottom: .375rem; }
+
+  /* --- Organism: Settings section --- */
+  .settings-section { background: var(--surface); padding: 2rem 0; }
+  .settings-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+  }
+  .settings-card + .settings-card { margin-top: .75rem; }
+  .form-check-input:checked { background-color: var(--primary); border-color: var(--primary); }
+
+  /* ============================================================
+   * TEMPLATES — 構造設計
+   * ページ全体のレイアウト骨格（ヘッダー・コンテンツ・フッター）
+   * ============================================================ */
+
+  section { scroll-margin-top: 72px; }
+
+  .page-section-header {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: .625rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .page-section-header i { color: var(--primary); }
+
+  footer {
+    background: #1a1a2e;
+    color: rgba(255,255,255,.5);
+    padding: 1.5rem 0;
+    font-size: .8rem;
+    text-align: center;
+  }
+
+  /* ============================================================
+   * PAGES — 完成画面固有の調整
+   * ============================================================ */
+
+  /* Progress bar inside task-detail modal */
+  #progressValue { min-width: 2.5rem; text-align: right; font-size: .85rem; font-weight: 600; color: var(--primary); }
+
+  /* Responsive tweaks */
+  @media (max-width: 576px) {
+    .summary-section .row { gap: .75rem; }
+    .fab { bottom: 1.25rem; right: 1.25rem; }
+  }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+   * TEMPLATE: Page layout skeleton
+   * Navbar + main content areas + FAB + Footer
+   * ============================================================ -->
+
+  <!-- ORGANISM: Navbar -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand text-white fw-bold" href="#">
+        <i class="bi bi-check2-square me-1"></i>課題管理
+      </a>
+      <button class="navbar-toggler border-0" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navMenu"
+              style="color:rgba(255,255,255,.8);">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="#tasks">課題</a></li>
+          <li class="nav-item"><a class="nav-link" href="#settings">設定</a></li>
+        </ul>
+        <!-- MOLECULE: Search bar -->
+        <form class="d-flex gap-2" role="search" onsubmit="return false">
+          <input class="form-control form-control-sm" type="search" placeholder="課題を検索..." id="searchInput">
+          <button class="btn btn-outline-light btn-sm" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ATOM: FAB (課題追加) -->
+  <button class="fab" data-bs-toggle="modal" data-bs-target="#addTaskModal" aria-label="課題を追加">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+
+  <!-- ============================================================
+   * PAGE: main content
+   * ============================================================ -->
+  <main>
+
+    <!-- ORGANISM: Summary section (ホーム) -->
+    <section id="home" class="summary-section">
+      <div class="container">
+
+        <!-- MOLECULE: Urgent alert -->
+        <div class="alert-urgent mb-3">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          今日締切の課題があります：<strong>情報工学 レポート</strong>
+        </div>
+
+        <!-- MOLECULE: Stat cards (3列) -->
+        <div class="row g-3">
+          <div class="col-4">
+            <div class="stat-card">
+              <!-- ATOM: stat label -->
+              <div class="stat-label">総課題数</div>
+              <!-- ATOM: stat value -->
+              <div class="stat-value">3</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="stat-card">
+              <div class="stat-label">完了</div>
+              <div class="stat-value">1</div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="stat-card">
+              <div class="stat-label">未完了</div>
+              <div class="stat-value">2</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ORGANISM: Task list section -->
+    <section id="tasks" class="task-list-section">
+      <div class="container">
+
+        <h2 class="page-section-header">
+          <i class="bi bi-list-task"></i>課題一覧
+        </h2>
+
+        <!-- MOLECULE: Tab switcher (今日 / 全て / 完了済み) -->
+        <ul class="nav nav-tabs mb-3" id="taskTab">
+          <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#tab-today">
+              <i class="bi bi-calendar-day me-1"></i>今日
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tab-all">
+              <i class="bi bi-calendar3 me-1"></i>全て
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tab-done">
+              <i class="bi bi-check2-all me-1"></i>完了済み
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          <!-- TAB: 今日 -->
+          <div class="tab-pane fade show active" id="tab-today">
+
+            <!-- MOLECULE: Group header -->
+            <div class="group-header today">今日締切</div>
+
+            <!-- MOLECULE: Task card (高) -->
+            <div class="task-card accent-high" data-task-id="1">
+              <!-- ATOM: Checkbox -->
+              <input type="checkbox" class="task-check" aria-label="完了にする">
+              <div class="task-card__body">
+                <p class="task-card__name">情報工学 レポート</p>
+                <p class="task-card__meta urgent"><i class="bi bi-clock-fill me-1"></i>期限：今日（4月18日）</p>
+              </div>
+              <div class="task-card__right">
+                <!-- ATOM: Priority badge -->
+                <span class="badge-priority badge-high">高</span>
+                <button class="btn btn-sm btn-outline-secondary border-0 p-1"
+                        onclick="openDetail(1)" aria-label="詳細を見る">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- MOLECULE: Group header -->
+            <div class="group-header tomorrow">明日締切</div>
+
+            <!-- MOLECULE: Task card (中) -->
+            <div class="task-card accent-mid" data-task-id="2">
+              <input type="checkbox" class="task-check" aria-label="完了にする">
+              <div class="task-card__body">
+                <p class="task-card__name">英語 プレゼン準備</p>
+                <p class="task-card__meta"><i class="bi bi-clock me-1"></i>期限：明日（4月19日）</p>
+              </div>
+              <div class="task-card__right">
+                <span class="badge-priority badge-mid">中</span>
+                <button class="btn btn-sm btn-outline-secondary border-0 p-1"
+                        onclick="openDetail(2)" aria-label="詳細を見る">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB: 全て (日付グループで整理) -->
+          <div class="tab-pane fade" id="tab-all">
+
+            <div class="group-header today">今日</div>
+            <div class="task-card accent-high" data-task-id="1">
+              <input type="checkbox" class="task-check">
+              <div class="task-card__body">
+                <p class="task-card__name">情報工学 レポート</p>
+                <p class="task-card__meta urgent"><i class="bi bi-clock-fill me-1"></i>4月18日</p>
+              </div>
+              <div class="task-card__right">
+                <span class="badge-priority badge-high">高</span>
+                <button class="btn btn-sm btn-outline-secondary border-0 p-1" onclick="openDetail(1)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="group-header tomorrow">明日</div>
+            <div class="task-card accent-mid" data-task-id="2">
+              <input type="checkbox" class="task-check">
+              <div class="task-card__body">
+                <p class="task-card__name">英語 プレゼン準備</p>
+                <p class="task-card__meta"><i class="bi bi-clock me-1"></i>4月19日</p>
+              </div>
+              <div class="task-card__right">
+                <span class="badge-priority badge-mid">中</span>
+                <button class="btn btn-sm btn-outline-secondary border-0 p-1" onclick="openDetail(2)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="group-header no-due">期限なし</div>
+            <div class="task-card accent-low done" data-task-id="3">
+              <input type="checkbox" class="task-check" checked>
+              <div class="task-card__body">
+                <p class="task-card__name">統計学 課題</p>
+                <p class="task-card__meta">No due</p>
+              </div>
+              <div class="task-card__right">
+                <span class="badge-priority badge-low">低</span>
+                <button class="btn btn-sm btn-outline-secondary border-0 p-1" onclick="openDetail(3)">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- TAB: 完了済み -->
+          <div class="tab-pane fade" id="tab-done">
+
+            <div class="group-header done">完了済み</div>
+            <div class="task-card accent-low done" data-task-id="3">
+              <input type="checkbox" class="task-check" checked>
+              <div class="task-card__body">
+                <p class="task-card__name">統計学 課題</p>
+                <p class="task-card__meta">完了済み</p>
+              </div>
+              <div class="task-card__right">
+                <span class="badge-priority badge-low">低</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANISM: Settings section -->
+    <section id="settings" class="settings-section">
+      <div class="container">
+
+        <h2 class="page-section-header">
+          <i class="bi bi-gear"></i>設定
+        </h2>
+
+        <!-- MOLECULE: Setting toggle row -->
+        <div class="settings-card d-flex align-items-center justify-content-between">
+          <div>
+            <div class="fw-600" style="font-size:.9rem;font-weight:600;">当日リマインダー</div>
+            <div class="text-muted" style="font-size:.8rem;">締切当日に通知を受け取る</div>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="sw1" checked>
+          </div>
+        </div>
+
+        <div class="settings-card d-flex align-items-center justify-content-between">
+          <div>
+            <div class="fw-600" style="font-size:.9rem;font-weight:600;">前日リマインダー</div>
+            <div class="text-muted" style="font-size:.8rem;">締切前日に通知を受け取る</div>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="sw2">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TEMPLATE: Footer -->
+  <footer>
+    <div class="container">
+      © 2025 課題管理アプリ — Atomic Design で構築
+    </div>
+  </footer>
+
+  <!-- ============================================================
+   * ORGANISM: Add Task Modal
+   * ============================================================ -->
+  <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="addTaskModalLabel">
+            <i class="bi bi-plus-circle me-2 text-primary"></i>課題を追加
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+        </div>
+        <div class="modal-body">
+
+          <!-- MOLECULE: Form fields -->
+          <div class="mb-3">
+            <!-- ATOM: Form label -->
+            <label class="form-label" for="taskName">課題名</label>
+            <!-- ATOM: Text input -->
+            <input type="text" class="form-control" id="taskName" placeholder="例：情報工学 レポート">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="taskSubject">科目</label>
+            <input type="text" class="form-control" id="taskSubject" placeholder="例：情報工学">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="taskDue">期限</label>
+            <input type="date" class="form-control" id="taskDue">
+          </div>
+
+          <!-- MOLECULE: Priority selector -->
+          <div class="mb-1">
+            <label class="form-label">優先度</label>
+            <div class="btn-group w-100 priority-selector" role="group">
+              <input type="radio" class="btn-check" name="prio" id="ph" checked>
+              <label class="btn btn-outline-danger" for="ph">高</label>
+              <input type="radio" class="btn-check" name="prio" id="pm">
+              <label class="btn btn-outline-warning" for="pm">中</label>
+              <input type="radio" class="btn-check" name="prio" id="pl">
+              <label class="btn btn-outline-secondary" for="pl">低</label>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">キャンセル</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                  onclick="saveTask()">
+            <i class="bi bi-check2 me-1"></i>保存
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+   * ORGANISM: Task Detail Modal
+   * ============================================================ -->
+  <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="detailModalLabel">タスク詳細</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="detailBody">
+          <!-- JS で動的に挿入 -->
+        </div>
+        <div class="modal-footer d-flex gap-2">
+          <button class="btn btn-success flex-fill"  id="btnComplete">
+            <i class="bi bi-check2 me-1"></i>完了にする
+          </button>
+          <button class="btn btn-outline-secondary"  id="btnEdit">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-outline-danger"     id="btnDelete">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  /* ============================================================
+   * PAGE: JavaScript — データとビューを分離
+   * ============================================================ */
+
+  /* --- Data layer (本来はバックエンド or localStorage) --- */
+  const tasks = [
+    { id: 1, name: '情報工学 レポート', subject: '情報工学', due: '4月18日', dueUrgent: true,  priority: 'high', progress: 30,  done: false },
+    { id: 2, name: '英語 プレゼン準備', subject: '英語',      due: '4月19日', dueUrgent: false, priority: 'mid',  progress: 10,  done: false },
+    { id: 3, name: '統計学 課題',       subject: '統計学',    due: null,      dueUrgent: false, priority: 'low',  progress: 100, done: true  },
+  ];
+
+  /* --- Helper: badge HTML --- */
+  function badgeHtml(p) {
+    const map = { high: ['badge-high','高'], mid: ['badge-mid','中'], low: ['badge-low','低'] };
+    const [cls, label] = map[p];
+    return `<span class="badge-priority ${cls}">${label}</span>`;
+  }
+
+  /* --- Organism behavior: open detail modal --- */
+  function openDetail(id) {
+    const t = tasks.find(t => t.id === id);
+    if (!t) return;
+
+    document.getElementById('detailModalLabel').textContent = t.name;
+    document.getElementById('detailBody').innerHTML = `
+      <table class="table table-sm mb-3">
+        <tr><th class="text-muted" style="font-size:.8rem;font-weight:600;border:none;width:5rem;">科目</th>
+            <td style="border:none;">${t.subject}</td></tr>
+        <tr><th class="text-muted" style="font-size:.8rem;font-weight:600;border:none;">期限</th>
+            <td style="border:none;" class="${t.dueUrgent ? 'text-danger fw-bold' : ''}">${t.due ?? '期限なし'}</td></tr>
+        <tr><th class="text-muted" style="font-size:.8rem;font-weight:600;border:none;">優先度</th>
+            <td style="border:none;">${badgeHtml(t.priority)}</td></tr>
+      </table>
+      <label class="form-label d-flex justify-content-between">
+        進捗 <span id="progressValue">${t.progress}%</span>
+      </label>
+      <input type="range" class="form-range" min="0" max="100" step="5" value="${t.progress}"
+             oninput="document.getElementById('progressValue').textContent = this.value + '%'">
+      <!-- ATOM: Progress bar -->
+      <div class="progress-atom mt-1">
+        <div class="progress-atom-fill" style="width:${t.progress}%"></div>
+      </div>
+    `;
+
+    document.getElementById('btnComplete').onclick = () => {
+      alert(`「${t.name}」を完了にしました`);
+    };
+
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal')).show();
+  }
+
+  /* --- Task save stub --- */
+  function saveTask() {
+    const name = document.getElementById('taskName').value;
+    if (name) alert(`「${name}」を追加しました（デモ）`);
+  }
+
+  /* --- Atom behavior: checkbox toggle done style --- */
+  document.querySelectorAll('.task-check').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('.task-card').classList.toggle('done', cb.checked);
+    });
+  });
+
+  /* --- Molecule behavior: search filter --- */
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.task-card').forEach(card => {
+      const name = card.querySelector('.task-card__name').textContent.toLowerCase();
+      card.style.display = name.includes(q) ? '' : 'none';
+    });
+  });
+  </script>
+</body>
+</html>

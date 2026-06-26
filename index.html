@@ -53,6 +53,28 @@
   .badge-mid  { background: var(--warning-bg); color: var(--warning-text); }
   .badge-low  { background: var(--neutral-bg); color: var(--neutral-text); }
 
+  /* --- Molecule: Priority legend（優先度バッジの意味を説明する凡例） --- */
+  .priority-legend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .4rem .5rem;
+    padding: .6rem .9rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: .8125rem;
+  }
+  .priority-legend__label {
+    font-weight: 700;
+    color: var(--text);
+    margin-right: .15rem;
+  }
+  .priority-legend__text {
+    color: var(--text-muted);
+    margin-right: .5rem;
+  }
+
   /* --- Atom: Left-border accent (priority color) --- */
   .accent-high { border-left: 4px solid var(--danger)  !important; }
   .accent-mid  { border-left: 4px solid var(--warning) !important; }
@@ -402,6 +424,17 @@
           <i class="bi bi-list-task"></i>課題一覧
         </h2>
 
+        <!-- MOLECULE: Priority legend（優先度の凡例） -->
+        <div class="priority-legend mb-3">
+          <span class="priority-legend__label">優先度：</span>
+          <span class="badge-priority badge-high" title="優先度：高（締切が近い・重要）">高</span>
+          <span class="priority-legend__text">締切が近い／重要</span>
+          <span class="badge-priority badge-mid" title="優先度：中（通常）">中</span>
+          <span class="priority-legend__text">通常</span>
+          <span class="badge-priority badge-low" title="優先度：低（余裕あり）">低</span>
+          <span class="priority-legend__text">余裕あり</span>
+        </div>
+
         <!-- MOLECULE: Tab switcher (今日 / 全て / 完了済み) -->
         <ul class="nav nav-tabs mb-3" id="taskTab">
           <li class="nav-item">
@@ -439,7 +472,7 @@
               </div>
               <div class="task-card__right">
                 <!-- ATOM: Priority badge -->
-                <span class="badge-priority badge-high">高</span>
+                <span class="badge-priority badge-high" title="優先度：高（締切が近い・重要）">高</span>
                 <button class="btn btn-sm btn-outline-secondary border-0 p-1"
                         onclick="openDetail(1)" aria-label="詳細を見る">
                   <i class="bi bi-chevron-right"></i>
@@ -458,7 +491,7 @@
                 <p class="task-card__meta"><i class="bi bi-clock me-1"></i>期限：明日（4月19日）</p>
               </div>
               <div class="task-card__right">
-                <span class="badge-priority badge-mid">中</span>
+                <span class="badge-priority badge-mid" title="優先度：中（通常）">中</span>
                 <button class="btn btn-sm btn-outline-secondary border-0 p-1"
                         onclick="openDetail(2)" aria-label="詳細を見る">
                   <i class="bi bi-chevron-right"></i>
@@ -479,7 +512,7 @@
                 <p class="task-card__meta urgent"><i class="bi bi-clock-fill me-1"></i>4月18日</p>
               </div>
               <div class="task-card__right">
-                <span class="badge-priority badge-high">高</span>
+                <span class="badge-priority badge-high" title="優先度：高（締切が近い・重要）">高</span>
                 <button class="btn btn-sm btn-outline-secondary border-0 p-1" onclick="openDetail(1)">
                   <i class="bi bi-chevron-right"></i>
                 </button>
@@ -494,7 +527,7 @@
                 <p class="task-card__meta"><i class="bi bi-clock me-1"></i>4月19日</p>
               </div>
               <div class="task-card__right">
-                <span class="badge-priority badge-mid">中</span>
+                <span class="badge-priority badge-mid" title="優先度：中（通常）">中</span>
                 <button class="btn btn-sm btn-outline-secondary border-0 p-1" onclick="openDetail(2)">
                   <i class="bi bi-chevron-right"></i>
                 </button>
@@ -509,7 +542,7 @@
                 <p class="task-card__meta">No due</p>
               </div>
               <div class="task-card__right">
-                <span class="badge-priority badge-low">低</span>
+                <span class="badge-priority badge-low" title="優先度：低（余裕あり）">低</span>
                 <button class="btn btn-sm btn-outline-secondary border-0 p-1" onclick="openDetail(3)">
                   <i class="bi bi-chevron-right"></i>
                 </button>
@@ -529,7 +562,7 @@
                 <p class="task-card__meta">完了済み</p>
               </div>
               <div class="task-card__right">
-                <span class="badge-priority badge-low">低</span>
+                <span class="badge-priority badge-low" title="優先度：低（余裕あり）">低</span>
               </div>
             </div>
 
@@ -679,9 +712,9 @@
 
   /* --- Helper: badge HTML --- */
   function badgeHtml(p) {
-    const map = { high: ['badge-high','高'], mid: ['badge-mid','中'], low: ['badge-low','低'] };
-    const [cls, label] = map[p];
-    return `<span class="badge-priority ${cls}">${label}</span>`;
+    const map = { high: ['badge-high','高','優先度：高（締切が近い・重要）'], mid: ['badge-mid','中','優先度：中（通常）'], low: ['badge-low','低','優先度：低（余裕あり）'] };
+    const [cls, label, title] = map[p] || map.low;
+    return `<span class="badge-priority ${cls}" title="${title}">${label}</span>`;
   }
 
   /* --- Organism behavior: open detail modal --- */
@@ -741,3 +774,4 @@
   </script>
 </body>
 </html>
+

@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>課題管理</title>
+  <title>課題マネージャー — 提出忘れをゼロに</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
   /* ============================================================
@@ -14,31 +15,36 @@
    * ============================================================ */
 
   :root {
-    --primary:        #378ADD;
-    --primary-dark:   #2568B0;
-    --danger:         #E24B4A;
-    --danger-bg:      #FCEBEB;
-    --danger-text:    #A32D2D;
-    --warning:        #EF9F27;
-    --warning-bg:     #FAEEDA;
-    --warning-text:   #854F0B;
-    --neutral-bg:     #F1EFE8;
-    --neutral-text:   #5F5E5A;
-    --neutral-border: #B4B2A9;
+    /* ===== Brand Colors ===== */
+    --primary:        #5C6BFF;   /* Primary Blue  */
+    --primary-dark:   #3346D0;   /* Primary Dark  */
+    --secondary:      #30C6B4;   /* Teal Accent   */
+    --danger:         #FF6B6B;   /* Alert Red     */
+    --danger-bg:      #FFE9E9;
+    --danger-text:    #B83333;
+    --warning:        #FFB86C;   /* Warm Accent   */
+    --warning-bg:     #FFF1E0;
+    --warning-text:   #8E5D28;
+    --success:        #3B9A2A;   /* Success Green */
+    --success-bg:     #EAF3DE;
+    --success-text:   #2D6A0A;
+    --neutral-bg:     #F8F9FF;
+    --neutral-text:   #6B7A99;
+    --neutral-border: #DCE4F0;
     --surface:        #ffffff;
-    --bg:             #F8F9FA;
-    --border:         #E9ECEF;
-    --text:           #212529;
-    --text-muted:     #6C757D;
-    --radius-sm:      6px;
-    --radius-md:      10px;
-    --radius-lg:      14px;
-    --shadow-sm:      0 1px 3px rgba(0,0,0,0.08);
-    --shadow-md:      0 4px 12px rgba(0,0,0,0.12);
+    --bg:             #F4F7FF;
+    --border:         #DCE4F0;
+    --text:           #172A4E;
+    --text-muted:     #64748B;
+    --radius-sm:      8px;
+    --radius-md:      14px;
+    --radius-lg:      20px;
+    --shadow-sm:      0 8px 18px rgba(32,45,78,0.08);
+    --shadow-md:      0 14px 40px rgba(32,45,78,0.12);
   }
 
   html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'Helvetica Neue', Arial, sans-serif; }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif; }
 
   /* --- Atom: Priority Badge --- */
   .badge-priority {
@@ -218,34 +224,71 @@
    * ============================================================ */
 
   /* --- Organism: Navbar --- */
-  .navbar { background: var(--primary) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-  .navbar .navbar-brand { font-weight: 700; letter-spacing: .03em; }
-  .navbar .nav-link { color: rgba(255,255,255,.85) !important; }
+  .navbar { background: linear-gradient(135deg, var(--primary-dark), var(--primary)) !important; box-shadow: 0 12px 30px rgba(51,70,208,0.18); }
+  .navbar .navbar-brand { font-weight: 700; letter-spacing: .02em; }
+  .navbar .nav-item + .nav-item { margin-left: 1rem; }
+  .navbar .nav-link {
+    color: rgba(255,255,255,.92) !important;
+    padding: .75rem 1rem;
+    border-radius: .75rem;
+    transition: background .2s, color .2s;
+  }
   .navbar .nav-link:hover,
-  .navbar .nav-link.active { color: #fff !important; }
+  .navbar .nav-link.active {
+    color: #fff !important;
+    background: rgba(255,255,255,.12);
+  }
+  .navbar .navbar-toggler { border-color: rgba(255,255,255,.35); }
 
   /* --- Organism: Summary section --- */
   .summary-section {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
     color: #fff;
     padding: 2rem 0;
   }
   .summary-section .stat-card {
-    background: rgba(255,255,255,.15);
-    border: 1px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.24);
     color: #fff;
   }
-  .summary-section .stat-label { color: rgba(255,255,255,.75); }
+  .summary-section .stat-label { color: rgba(255,255,255,.82); }
   .summary-section .alert-urgent {
-    background: rgba(255,255,255,.2);
-    border: 1px solid rgba(255,255,255,.4);
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.35);
     border-radius: var(--radius-md);
-    padding: .625rem 1rem;
-    font-size: .875rem;
+    padding: .75rem 1rem;
+    font-size: .95rem;
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: .5rem;
+  }
+  .btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover,
+  .btn-primary:focus {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+  }
+  .btn-outline-light {
+    color: rgba(255,255,255,.95);
+    border-color: rgba(255,255,255,.5);
+  }
+  .btn-outline-light:hover {
+    background: rgba(255,255,255,.12);
+    border-color: rgba(255,255,255,.6);
+  }
+  .btn-outline-secondary {
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .btn-outline-secondary:hover {
+    background: rgba(92,107,255,.08);
+    border-color: var(--primary);
   }
 
   /* --- Organism: Task list with tabs --- */
@@ -259,12 +302,18 @@
     border: none;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
-    padding: .625rem 1.25rem;
-    font-weight: 500;
+    padding: .75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
     transition: color .15s, border-color .15s;
   }
-  .nav-tabs .nav-link:hover { color: var(--primary); border-bottom-color: var(--primary); }
-  .nav-tabs .nav-link.active { color: var(--primary); border-bottom-color: var(--primary); background: transparent; }
+  .nav-tabs .nav-link:hover { color: var(--primary-dark); border-bottom-color: var(--primary); }
+  .nav-tabs .nav-link.active {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary);
+    background: rgba(92,107,255,.08);
+    border-radius: .75rem .75rem 0 0;
+  }
 
   /* --- Organism: Add Task Modal --- */
   .modal-content { border-radius: var(--radius-lg); border: none; box-shadow: 0 16px 48px rgba(0,0,0,0.18); }
@@ -309,7 +358,7 @@
     align-items: center;
     gap: .5rem;
   }
-  .page-section-header i { color: var(--primary); }
+  .page-section-header i { color: var(--primary-dark); }
 
   footer {
     background: #1a1a2e;
@@ -344,8 +393,21 @@
   <!-- ORGANISM: Navbar -->
   <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-      <a class="navbar-brand text-white fw-bold" href="#">
-        <i class="bi bi-check2-square me-1"></i>課題管理
+      <a class="navbar-brand text-white fw-bold" href="#" style="display:flex;align-items:center;gap:8px">
+        <!-- Brand Icon: カレンダー＋注意マーク -->
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="2" y="5" width="24" height="22" rx="4" fill="rgba(255,255,255,0.95)"/>
+          <rect x="2" y="5" width="24" height="9" rx="4" fill="rgba(255,255,255,0.6)"/>
+          <rect x="2" y="10" width="24" height="4" fill="rgba(255,255,255,0.6)"/>
+          <rect x="8" y="2" width="3" height="7" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="17" y="2" width="3" height="7" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+          <rect x="7" y="18" width="4" height="4" rx="1" fill="#2568B0" opacity="0.85"/>
+          <rect x="14" y="18" width="4" height="4" rx="1" fill="#2568B0" opacity="0.85"/>
+          <circle cx="25" cy="25" r="7" fill="#E24B4A"/>
+          <rect x="23.6" y="21.5" width="2.8" height="4.8" rx="1.4" fill="white"/>
+          <circle cx="25" cy="28.2" r="1.4" fill="white"/>
+        </svg>
+        課題マネージャー
       </a>
       <button class="navbar-toggler border-0" type="button"
               data-bs-toggle="collapse" data-bs-target="#navMenu"
@@ -608,7 +670,7 @@
   <!-- TEMPLATE: Footer -->
   <footer>
     <div class="container">
-      © 2025 課題管理アプリ — Atomic Design で構築
+      © 2025 課題マネージャー — 提出忘れをゼロに
     </div>
   </footer>
 
@@ -774,4 +836,5 @@
   </script>
 </body>
 </html>
+
 

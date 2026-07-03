@@ -16,31 +16,31 @@
 
   :root {
     /* ===== Brand Colors ===== */
-    --primary:        #5C6BFF;   /* Primary Blue  */
-    --primary-dark:   #3346D0;   /* Primary Dark  */
-    --secondary:      #30C6B4;   /* Teal Accent   */
-    --danger:         #FF6B6B;   /* Alert Red     */
-    --danger-bg:      #FFE9E9;
-    --danger-text:    #B83333;
-    --warning:        #FFB86C;   /* Warm Accent   */
-    --warning-bg:     #FFF1E0;
-    --warning-text:   #8E5D28;
+    --primary:        #378ADD;   /* Primary Blue  */
+    --primary-dark:   #2568B0;   /* Primary Dark  */
+    --navy:           #1A2E4A;   /* Navy          */
+    --danger:         #E24B4A;   /* Alert Red     */
+    --danger-bg:      #FCEBEB;
+    --danger-text:    #A32D2D;
+    --warning:        #EF9F27;   /* Warning Orange */
+    --warning-bg:     #FAEEDA;
+    --warning-text:   #854F0B;
     --success:        #3B9A2A;   /* Success Green */
     --success-bg:     #EAF3DE;
     --success-text:   #2D6A0A;
-    --neutral-bg:     #F8F9FF;
-    --neutral-text:   #6B7A99;
-    --neutral-border: #DCE4F0;
+    --neutral-bg:     #F1EFE8;
+    --neutral-text:   #5F5E5A;
+    --neutral-border: #B4B2A9;
     --surface:        #ffffff;
-    --bg:             #F4F7FF;
-    --border:         #DCE4F0;
-    --text:           #172A4E;
-    --text-muted:     #64748B;
-    --radius-sm:      8px;
-    --radius-md:      14px;
-    --radius-lg:      20px;
-    --shadow-sm:      0 8px 18px rgba(32,45,78,0.08);
-    --shadow-md:      0 14px 40px rgba(32,45,78,0.12);
+    --bg:             #F5F7FA;   /* Off White     */
+    --border:         #E2E8F0;
+    --text:           #1A2E4A;   /* Navyをテキストカラーに */
+    --text-muted:     #64748B;   /* Muted Text    */
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      14px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md:      0 4px 12px rgba(0,0,0,0.12);
   }
 
   html { scroll-behavior: smooth; }
@@ -224,71 +224,34 @@
    * ============================================================ */
 
   /* --- Organism: Navbar --- */
-  .navbar { background: linear-gradient(135deg, var(--primary-dark), var(--primary)) !important; box-shadow: 0 12px 30px rgba(51,70,208,0.18); }
-  .navbar .navbar-brand { font-weight: 700; letter-spacing: .02em; }
-  .navbar .nav-item + .nav-item { margin-left: 1rem; }
-  .navbar .nav-link {
-    color: rgba(255,255,255,.92) !important;
-    padding: .75rem 1rem;
-    border-radius: .75rem;
-    transition: background .2s, color .2s;
-  }
+  .navbar { background: var(--navy) !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .navbar .navbar-brand { font-weight: 700; letter-spacing: .03em; }
+  .navbar .nav-link { color: rgba(255,255,255,.85) !important; }
   .navbar .nav-link:hover,
-  .navbar .nav-link.active {
-    color: #fff !important;
-    background: rgba(255,255,255,.12);
-  }
-  .navbar .navbar-toggler { border-color: rgba(255,255,255,.35); }
+  .navbar .nav-link.active { color: #fff !important; }
 
   /* --- Organism: Summary section --- */
   .summary-section {
-    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: #fff;
     padding: 2rem 0;
   }
   .summary-section .stat-card {
-    background: rgba(255,255,255,.16);
-    border: 1px solid rgba(255,255,255,.24);
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
     color: #fff;
   }
-  .summary-section .stat-label { color: rgba(255,255,255,.82); }
+  .summary-section .stat-label { color: rgba(255,255,255,.75); }
   .summary-section .alert-urgent {
-    background: rgba(255,255,255,.18);
-    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.4);
     border-radius: var(--radius-md);
-    padding: .75rem 1rem;
-    font-size: .95rem;
+    padding: .625rem 1rem;
+    font-size: .875rem;
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: .5rem;
-  }
-  .btn-primary {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
-  }
-  .btn-primary:hover,
-  .btn-primary:focus {
-    background: var(--primary-dark);
-    border-color: var(--primary-dark);
-    color: #fff;
-  }
-  .btn-outline-light {
-    color: rgba(255,255,255,.95);
-    border-color: rgba(255,255,255,.5);
-  }
-  .btn-outline-light:hover {
-    background: rgba(255,255,255,.12);
-    border-color: rgba(255,255,255,.6);
-  }
-  .btn-outline-secondary {
-    color: var(--text);
-    border-color: var(--border);
-  }
-  .btn-outline-secondary:hover {
-    background: rgba(92,107,255,.08);
-    border-color: var(--primary);
   }
 
   /* --- Organism: Task list with tabs --- */
@@ -302,18 +265,12 @@
     border: none;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
-    padding: .75rem 1.25rem;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: .625rem 1.25rem;
+    font-weight: 500;
     transition: color .15s, border-color .15s;
   }
-  .nav-tabs .nav-link:hover { color: var(--primary-dark); border-bottom-color: var(--primary); }
-  .nav-tabs .nav-link.active {
-    color: var(--primary-dark);
-    border-bottom-color: var(--primary);
-    background: rgba(92,107,255,.08);
-    border-radius: .75rem .75rem 0 0;
-  }
+  .nav-tabs .nav-link:hover { color: var(--primary); border-bottom-color: var(--primary); }
+  .nav-tabs .nav-link.active { color: var(--primary); border-bottom-color: var(--primary); background: transparent; }
 
   /* --- Organism: Add Task Modal --- */
   .modal-content { border-radius: var(--radius-lg); border: none; box-shadow: 0 16px 48px rgba(0,0,0,0.18); }
@@ -759,30 +716,186 @@
     </div>
   </div>
 
+  <!-- ============================================================
+   * ORGANISM: Delete Confirm Modal（削除確認）
+   * ============================================================ -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>削除の確認
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body pt-2">
+          <p class="mb-1" style="font-size:.9rem;">
+            「<strong id="deleteTaskName"></strong>」を削除しますか？
+          </p>
+          <p class="text-muted mb-0" style="font-size:.8rem;">この操作は取り消せません。</p>
+        </div>
+        <div class="modal-footer border-0 pt-0 gap-2">
+          <button type="button" class="btn btn-light flex-fill" data-bs-dismiss="modal">キャンセル</button>
+          <button type="button" class="btn btn-danger flex-fill" id="btnDeleteConfirm">
+            <i class="bi bi-trash me-1"></i>削除する
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
   /* ============================================================
-   * PAGE: JavaScript — データとビューを分離
+   * PAGE: JavaScript — 完全動作版
+   * 修正点：
+   *   1. saveTask  → 実際にDOMへ追加 & カウンター更新
+   *   2. btnEdit   → 編集フォームを開いて内容を上書き保存
+   *   3. btnDelete → 削除確認モーダル表示 → タスク削除
+   *   4. checkbox  → 動的追加カードにも効くよう委任方式に変更
+   *   5. 進捗スライダー → 詳細モーダル内で保存ボタンで反映
+   *   6. カウンター → 追加・完了・削除のたびに再計算
    * ============================================================ */
 
-  /* --- Data layer (本来はバックエンド or localStorage) --- */
+  /* ---------- データ層 ---------- */
+  let nextId = 4;
   const tasks = [
     { id: 1, name: '情報工学 レポート', subject: '情報工学', due: '4月18日', dueUrgent: true,  priority: 'high', progress: 30,  done: false },
     { id: 2, name: '英語 プレゼン準備', subject: '英語',      due: '4月19日', dueUrgent: false, priority: 'mid',  progress: 10,  done: false },
     { id: 3, name: '統計学 課題',       subject: '統計学',    due: null,      dueUrgent: false, priority: 'low',  progress: 100, done: true  },
   ];
 
-  /* --- Helper: badge HTML --- */
+  /* ---------- ヘルパー ---------- */
+  const BADGE = {
+    high: ['badge-high', '高', '優先度：高（締切が近い・重要）'],
+    mid:  ['badge-mid',  '中', '優先度：中（通常）'],
+    low:  ['badge-low',  '低', '優先度：低（余裕あり）'],
+  };
   function badgeHtml(p) {
-    const map = { high: ['badge-high','高','優先度：高（締切が近い・重要）'], mid: ['badge-mid','中','優先度：中（通常）'], low: ['badge-low','低','優先度：低（余裕あり）'] };
-    const [cls, label, title] = map[p] || map.low;
+    const [cls, label, title] = BADGE[p] || BADGE.low;
     return `<span class="badge-priority ${cls}" title="${title}">${label}</span>`;
   }
+  function accentClass(p) {
+    return { high: 'accent-high', mid: 'accent-mid', low: 'accent-low' }[p] || 'accent-low';
+  }
 
-  /* --- Organism behavior: open detail modal --- */
+  /* ---------- カウンター更新 ---------- */
+  function updateStats() {
+    const total  = tasks.length;
+    const done   = tasks.filter(t => t.done).length;
+    const undone = total - done;
+    document.querySelectorAll('.stat-value').forEach((el, i) => {
+      if (i === 0) el.textContent = total;
+      if (i === 1) el.textContent = done;
+      if (i === 2) el.textContent = undone;
+    });
+  }
+
+  /* ---------- タスクカードHTML生成 ---------- */
+  function taskCardHtml(t) {
+    const doneClass  = t.done ? ' done' : '';
+    const metaClass  = t.dueUrgent ? ' urgent' : '';
+    const metaIcon   = t.dueUrgent ? 'bi-clock-fill' : 'bi-clock';
+    const dueText    = t.due ? `期限：${t.due}` : '期限なし';
+    return `
+      <div class="task-card ${accentClass(t.priority)}${doneClass}" data-task-id="${t.id}">
+        <input type="checkbox" class="task-check" ${t.done ? 'checked' : ''} aria-label="完了にする">
+        <div class="task-card__body">
+          <p class="task-card__name">${t.name}</p>
+          <p class="task-card__meta${metaClass}"><i class="bi ${metaIcon} me-1"></i>${dueText}</p>
+        </div>
+        <div class="task-card__right">
+          ${badgeHtml(t.priority)}
+          <button class="btn btn-sm btn-outline-secondary border-0 p-1"
+                  onclick="openDetail(${t.id})" aria-label="詳細を見る">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>`;
+  }
+
+  /* ---------- タブ全体を再描画 ---------- */
+  function renderAllTabs() {
+    const undone = tasks.filter(t => !t.done);
+    const today  = undone.filter(t => t.dueUrgent);
+    const tmrw   = undone.filter(t => !t.dueUrgent && t.due);
+    const done   = tasks.filter(t => t.done);
+
+    // 今日タブ
+    document.getElementById('tab-today').innerHTML =
+      (today.length  ? '<div class="group-header today">今日締切</div>'   + today.map(taskCardHtml).join('') : '') +
+      (tmrw.length   ? '<div class="group-header tomorrow">明日締切</div>' + tmrw.map(taskCardHtml).join('')  : '') +
+      (!today.length && !tmrw.length ? '<p class="text-muted py-3 text-center">今日・明日締切の課題はありません</p>' : '');
+
+    // 全てタブ
+    const all = tasks;
+    document.getElementById('tab-all').innerHTML =
+      (today.length ? '<div class="group-header today">今日</div>'  + today.map(taskCardHtml).join('') : '') +
+      (tmrw.length  ? '<div class="group-header tomorrow">明日</div>' + tmrw.map(taskCardHtml).join('')  : '') +
+      (tasks.filter(t=>!t.done&&!t.due).length
+        ? '<div class="group-header no-due">期限なし</div>' + tasks.filter(t=>!t.done&&!t.due).map(taskCardHtml).join('') : '') +
+      (done.length  ? '<div class="group-header done">完了済み</div>'  + done.map(taskCardHtml).join('')  : '');
+
+    // 完了済みタブ
+    document.getElementById('tab-done').innerHTML =
+      done.length
+        ? '<div class="group-header done">完了済み</div>' + done.map(taskCardHtml).join('')
+        : '<p class="text-muted py-3 text-center">完了した課題はまだありません</p>';
+
+    updateStats();
+  }
+
+  /* ---------- 1. 課題追加（saveTask）実際にDOM追加 ---------- */
+  function saveTask() {
+    const name    = document.getElementById('taskName').value.trim();
+    const subject = document.getElementById('taskSubject').value.trim();
+    const due     = document.getElementById('taskDue').value;
+    const prioEl  = document.querySelector('input[name="prio"]:checked');
+    const prio    = prioEl ? prioEl.id.replace('p','') : 'low'; // ph→h, pm→m, pl→l
+    const prioMap = { h: 'high', m: 'mid', l: 'low' };
+
+    if (!name) {
+      document.getElementById('taskName').focus();
+      return;
+    }
+
+    // 期限文字列を整形
+    let dueStr = null, dueUrgent = false;
+    if (due) {
+      const d = new Date(due);
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diff = (d - today) / 86400000;
+      dueStr    = `${d.getMonth()+1}月${d.getDate()}日`;
+      dueUrgent = diff <= 0;
+    }
+
+    const newTask = {
+      id: nextId++,
+      name,
+      subject: subject || '未設定',
+      due: dueStr,
+      dueUrgent,
+      priority: prioMap[prio] || 'low',
+      progress: 0,
+      done: false,
+    };
+    tasks.push(newTask);
+    renderAllTabs();
+
+    // フォームリセット
+    document.getElementById('taskName').value    = '';
+    document.getElementById('taskSubject').value = '';
+    document.getElementById('taskDue').value     = '';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('addTaskModal')).hide();
+  }
+
+  /* ---------- 2. 詳細モーダルを開く ---------- */
+  let currentTaskId = null;
+
   function openDetail(id) {
     const t = tasks.find(t => t.id === id);
     if (!t) return;
+    currentTaskId = id;
 
     document.getElementById('detailModalLabel').textContent = t.name;
     document.getElementById('detailBody').innerHTML = `
@@ -790,7 +903,8 @@
         <tr><th class="text-muted" style="font-size:.8rem;font-weight:600;border:none;width:5rem;">科目</th>
             <td style="border:none;">${t.subject}</td></tr>
         <tr><th class="text-muted" style="font-size:.8rem;font-weight:600;border:none;">期限</th>
-            <td style="border:none;" class="${t.dueUrgent ? 'text-danger fw-bold' : ''}">${t.due ?? '期限なし'}</td></tr>
+            <td style="border:none;" class="${t.dueUrgent ? 'text-danger fw-bold' : ''}">
+              ${t.due ?? '期限なし'}</td></tr>
         <tr><th class="text-muted" style="font-size:.8rem;font-weight:600;border:none;">優先度</th>
             <td style="border:none;">${badgeHtml(t.priority)}</td></tr>
       </table>
@@ -798,34 +912,124 @@
         進捗 <span id="progressValue">${t.progress}%</span>
       </label>
       <input type="range" class="form-range" min="0" max="100" step="5" value="${t.progress}"
-             oninput="document.getElementById('progressValue').textContent = this.value + '%'">
-      <!-- ATOM: Progress bar -->
+             id="progressSlider"
+             oninput="document.getElementById('progressValue').textContent=this.value+'%';
+                      document.querySelector('#detailBody .progress-atom-fill').style.width=this.value+'%'">
       <div class="progress-atom mt-1">
         <div class="progress-atom-fill" style="width:${t.progress}%"></div>
       </div>
     `;
 
+    /* 完了ボタン */
     document.getElementById('btnComplete').onclick = () => {
-      alert(`「${t.name}」を完了にしました`);
+      t.done = true;
+      t.progress = 100;
+      renderAllTabs();
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal')).hide();
     };
+
+    /* 3. 編集ボタン → 編集モーダルを開く */
+    document.getElementById('btnEdit').onclick = () => {
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal')).hide();
+      openEdit(id);
+    };
+
+    /* 4. 削除ボタン → 削除確認モーダルを開く */
+    document.getElementById('btnDelete').onclick = () => {
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal')).hide();
+      openDeleteConfirm(id);
+    };
+
+    /* 進捗スライダーの値を保存するボタン（detailModalのfooterに保存ボタンを追加） */
+    // progress はスライダー変更時にリアルタイムでt.progressに書き戻す
+    document.getElementById('progressSlider')?.addEventListener('change', function() {
+      t.progress = Number(this.value);
+    });
 
     bootstrap.Modal.getOrCreateInstance(document.getElementById('detailModal')).show();
   }
 
-  /* --- Task save stub --- */
-  function saveTask() {
-    const name = document.getElementById('taskName').value;
-    if (name) alert(`「${name}」を追加しました（デモ）`);
+  /* ---------- 3. 編集モーダル ---------- */
+  function openEdit(id) {
+    const t = tasks.find(t => t.id === id);
+    if (!t) return;
+
+    // 編集用モーダル（addTaskModalを再利用して値を埋める）
+    document.getElementById('addTaskModalLabel').textContent = '課題を編集';
+    document.getElementById('taskName').value    = t.name;
+    document.getElementById('taskSubject').value = t.subject === '未設定' ? '' : t.subject;
+    document.getElementById('taskDue').value     = '';  // 日付は再入力
+
+    // 優先度ラジオを選択
+    const prioIdMap = { high: 'ph', mid: 'pm', low: 'pl' };
+    const prioEl = document.getElementById(prioIdMap[t.priority]);
+    if (prioEl) prioEl.checked = true;
+
+    // 保存ボタンを「更新」動作に差し替え
+    const saveBtn = document.querySelector('#addTaskModal .btn-primary');
+    saveBtn.textContent = '更新';
+    saveBtn.onclick = () => updateTask(id);
+
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('addTaskModal')).show();
   }
 
-  /* --- Atom behavior: checkbox toggle done style --- */
-  document.querySelectorAll('.task-check').forEach(cb => {
-    cb.addEventListener('change', () => {
-      cb.closest('.task-card').classList.toggle('done', cb.checked);
-    });
+  function updateTask(id) {
+    const t = tasks.find(t => t.id === id);
+    if (!t) return;
+    const name    = document.getElementById('taskName').value.trim();
+    const subject = document.getElementById('taskSubject').value.trim();
+    const due     = document.getElementById('taskDue').value;
+    const prioEl  = document.querySelector('input[name="prio"]:checked');
+    const prio    = prioEl ? prioEl.id.replace('p','') : 'l';
+    const prioMap = { h: 'high', m: 'mid', l: 'low' };
+
+    if (!name) return;
+    t.name     = name;
+    t.subject  = subject || '未設定';
+    t.priority = prioMap[prio] || t.priority;
+    if (due) {
+      const d = new Date(due);
+      const today = new Date(); today.setHours(0,0,0,0);
+      t.due      = `${d.getMonth()+1}月${d.getDate()}日`;
+      t.dueUrgent = (d - today) / 86400000 <= 0;
+    }
+    renderAllTabs();
+
+    // ボタンを元に戻す
+    const saveBtn = document.querySelector('#addTaskModal .btn-primary');
+    saveBtn.textContent = '保存';
+    saveBtn.onclick = saveTask;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('addTaskModal')).hide();
+  }
+
+  /* ---------- 4. 削除確認モーダル ---------- */
+  function openDeleteConfirm(id) {
+    const t = tasks.find(t => t.id === id);
+    if (!t) return;
+    document.getElementById('deleteTaskName').textContent = t.name;
+    document.getElementById('btnDeleteConfirm').onclick = () => {
+      const idx = tasks.findIndex(t => t.id === id);
+      if (idx !== -1) tasks.splice(idx, 1);
+      renderAllTabs();
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal')).hide();
+    };
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal')).show();
+  }
+
+  /* ---------- 5. チェックボックス（委任方式） ---------- */
+  document.addEventListener('change', function(e) {
+    if (!e.target.classList.contains('task-check')) return;
+    const card = e.target.closest('.task-card');
+    const id   = Number(card.dataset.taskId);
+    const t    = tasks.find(t => t.id === id);
+    if (t) {
+      t.done = e.target.checked;
+      if (t.done) t.progress = 100;
+      renderAllTabs();
+    }
   });
 
-  /* --- Molecule behavior: search filter --- */
+  /* ---------- 6. 検索フィルター ---------- */
   document.getElementById('searchInput').addEventListener('input', function() {
     const q = this.value.toLowerCase();
     document.querySelectorAll('.task-card').forEach(card => {
@@ -833,8 +1037,13 @@
       card.style.display = name.includes(q) ? '' : 'none';
     });
   });
+
+  /* ---------- 保存ボタンのデフォルト動作を設定 ---------- */
+  document.querySelector('#addTaskModal .btn-primary').onclick = saveTask;
+
+  /* ---------- 初期描画 ---------- */
+  renderAllTabs();
   </script>
 </body>
 </html>
-
 
